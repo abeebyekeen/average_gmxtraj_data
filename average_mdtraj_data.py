@@ -1,9 +1,11 @@
 import os
 import numpy as np
 
-# Get the current working directory containing input files
+# Get the current working directory
+current_directory = os.getcwd()
 
-input_directory = os.getcwd()
+# Directory containing input files
+input_directory = current_directory
 
 # Get a list of input files in the directory
 input_files = [file for file in os.listdir(input_directory) if file.endswith(".xvg")]
@@ -15,7 +17,7 @@ for file_name in input_files:
     with open(file_path, "r") as file:
         lines = file.readlines()
         # Skip the header lines
-        lines = [line for line in lines if not (line.startswith("#") or line.startswith("@"))]
+        lines = [line for line in lines if not line.startswith("#")]
         # Extract x and y values
         x = []
         y = []
@@ -23,11 +25,11 @@ for file_name in input_files:
             values = line.strip().split()
             x.append(float(values[0]))
             y.append(float(values[1]))
-        data.append(y)
+        data.append((file_name, y))  # Store file name along with y values
 
 # Calculate mean and standard deviation
-mean_rmsd = np.mean(data, axis=0)
-std_rmsd = np.std(data, axis=0)
+mean_rmsd = np.mean([y for _, y in data], axis=0)
+std_rmsd = np.std([y for _, y in data], axis=0)
 
 # Generate new xvg file with mean rmsd
 output_file_mean = "mean_rmsd.xvg"
@@ -42,5 +44,16 @@ with open(output_file_stats, "w") as file:
     file.write("Time\tRMSD\tStandard Deviation\n")
     for i in range(len(x)):
         file.write(f"{x[i]}\t{mean_rmsd[i]}\t{std_rmsd[i]}\n")
+
+# Generate new file with time and y-axis values from input files
+output_file_data = "data_values.txt"
+with open(output_file_data, "w") as file:
+    file.write("Time\t")
+    file.write("\t".join([file_name for file_name, _ in data]))  # Write column headers
+    file.write("\n")
+    for i in range(len(x)):
+        file.write(f"{x[i]}\t")
+        file.write("\t".join([str(y[i]) for _, y in data]))  # Write y-axis values
+        file.write("\n")
 
 print("Files generated successfully.")
