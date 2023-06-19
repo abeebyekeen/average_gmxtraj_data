@@ -45,15 +45,15 @@ with open(output_file_stats, "w") as file:
     for i in range(len(x)):
         file.write(f"{x[i]}\t{mean_rmsd[i]}\t{std_rmsd[i]}\n")
 
-# Generate new file with time and y-axis values from input files
+# Generate new file with time, y-axis values, mean, and standard deviation
 output_file_data = "data_values.txt"
 with open(output_file_data, "w") as file:
     file.write("Time\t")
     file.write("\t".join([file_name for file_name, _ in data]))  # Write column headers
-    file.write("\n")
+    file.write("\tMean\tStandard Deviation\n")  # Additional column headers
     for i in range(len(x)):
         file.write(f"{x[i]}\t")
         file.write("\t".join([str(y[i]) for _, y in data]))  # Write y-axis values
-        file.write("\n")
+        file.write(f"\t{mean_rmsd[i]}\t{std_rmsd[i]}\n")  # Write mean and standard deviation values
 
 print("Files generated successfully.")
