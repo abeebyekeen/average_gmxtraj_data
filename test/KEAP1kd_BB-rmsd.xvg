@@ -11,7 +11,7 @@
 #
 # Great Red Owns Many ACres of Sand 
 #
-@    title "RMSD"
+@    title "RMSD""Ave"
 @    xaxis  label "Time (ns)"
 @    yaxis  label "RMSD (nm)"
 @TYPE xy

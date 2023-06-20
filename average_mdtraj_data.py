@@ -23,7 +23,9 @@ for file_name in input_files:
             if ("yaxis" in line and "label" in line):
                 ylabel = line
             if "@TYPE" in line:
-                plot_type = line            
+                plot_type = line
+        plot_title = '@    title "Averaged Data"\n'
+        plot_legend = '@ s0 legend "Average"\n'
         # Skip the header lines
         lines = [line for line in lines if not (line.startswith("#") or line.startswith("@"))]
         # Extract x and y values
@@ -47,30 +49,30 @@ time.sleep(2)
 output_file_mean = "mean_data.xvg"
 with open(output_file_mean, "w") as file:
     file.write("# Mean Data\n")
-    file.write(f"{xlabel}{ylabel}{plot_type}")
+    file.write(f"{plot_title}{xlabel}{ylabel}{plot_type}{plot_legend}")
     for i in range(len(x)):
-        file.write(f"{x[i]} {mean_data[i]:.7f}\n")
+        file.write(f"{x[i]}\t{mean_data[i]:.8f}\n")
 
 # Generate new file with time, data, and std dev
 print(" Writing out the time-average-stddev lookup file...\n")
 time.sleep(2)
-output_file_stats = "data_stats.txt"
+output_file_stats = "data_stats.dat"
 with open(output_file_stats, "w") as file:
     file.write("Time\tData\tStd-dev\n")
     for i in range(len(x)):
-        file.write(f"{x[i]}\t{mean_data[i]:.7f}\t{std_data[i]:.7f}\n")
+        file.write(f"{x[i]}\t{mean_data[i]:.8f}\t{std_data[i]:.8f}\n")
 
 # Generate new file with time, y-axis values, mean, and std dev
 print(" Writing out the time-data_values-average-stddev lookup file...\n")
 time.sleep(2)
-output_file_data = "data_values.txt"
+output_file_data = "data_values.dat"
 with open(output_file_data, "w") as file:
     file.write("Time\t")
     file.write("\t".join([file_name.rstrip(".xvg") for file_name, _ in data]))
     file.write("\tMean\tStd-dev\n")
     for i in range(len(x)):
         file.write(f"{x[i]}\t")
-        file.write("\t".join([str(y[i]) for _, y in data]))  # Write y-axis values
-        file.write(f"\t{mean_data[i]:.7f}\t{std_data[i]}:.7f\n")  # Write mean and std dev values
+        file.write("\t\t".join([str(y[i]) for _, y in data]))  # Write y-axis values
+        file.write(f"\t\t{mean_data[i]:.8f}\t\t{std_data[i]:.8f}\n")  # Write mean and std dev values
 
 print(" Run successfully completed!!!\n")
