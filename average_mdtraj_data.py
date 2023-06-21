@@ -10,7 +10,7 @@ input_files = [file for file in os.listdir(input_directory) if file.endswith(".x
 
 # Load data from input files
 print("\n Loading data from input files found in the working directoy...\n")
-time.sleep(2)
+time.sleep(1)
 data = []
 for file_name in input_files:
     file_path = os.path.join(input_directory, file_name)
@@ -39,13 +39,13 @@ for file_name in input_files:
 
 # Calculate mean and dtd-dev
 print(" Calculating mean and standard deviation...\n")
-time.sleep(2)
+time.sleep(1)
 mean_data = np.mean([y for _, y in data], axis=0)
 std_data = np.std([y for _, y in data], axis=0)
 
 # Generate new xvg file with averaged data
 print(" Writing out the time-average plot...\n")
-time.sleep(2)
+time.sleep(1)
 output_file_mean = "mean_data.xvg"
 with open(output_file_mean, "w") as file:
     file.write("# Mean Data\n")
@@ -55,7 +55,7 @@ with open(output_file_mean, "w") as file:
 
 # Generate new file with time, data, and std dev
 print(" Writing out the time-average-stddev lookup file...\n")
-time.sleep(2)
+time.sleep(1)
 output_file_stats = "data_stats.dat"
 with open(output_file_stats, "w") as file:
     file.write("Time\tData\tStd-dev\n")
@@ -64,7 +64,7 @@ with open(output_file_stats, "w") as file:
 
 # Generate new file with time, y-axis values, mean, and std dev
 print(" Writing out the time-data_values-average-stddev lookup file...\n")
-time.sleep(2)
+time.sleep(1)
 output_file_data = "data_values.dat"
 with open(output_file_data, "w") as file:
     file.write("Time\t")
