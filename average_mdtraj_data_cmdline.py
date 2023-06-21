@@ -4,18 +4,20 @@ import argparse
 import numpy as np
 
 # Create an argument parser
-parser = argparse.ArgumentParser(description="Generate summary files for xvg data")
-parser.add_argument("-d", "--directory", help="Path to the directory containing the input xvg files", required=True)
-parser.add_argument("-l", "--label", help="String label", required=True)
+parser = argparse.ArgumentParser(description="Generate averaged plots and stats for multiple .xvg data")
+parser.add_argument("-d", "--directory",
+                    help="Path to the directory containing the input xvg files")
+parser.add_argument("-l", "--label",
+                    help="String label")
 args = parser.parse_args()
 
-# Get the directory path and label from command line arguments
-input_directory = args.directory
-label = args.label
+# Get label and path to the input files
+input_directory = args.directory or os.getcwd()
+label = args.label or ""
 
 # Check if the input directory exists
 if not os.path.isdir(input_directory):
-    print("Invalid input directory path.")
+    print("\nInvalid input directory path.")
     sys.exit(1)
 
 # Get a list of input files in the directory
@@ -43,21 +45,21 @@ mean_rmsd = np.mean([y for _, y in data], axis=0)
 std_rmsd = np.std([y for _, y in data], axis=0)
 
 # Generate new xvg file with mean rmsd
-output_file_mean = f"{label}_mean_rmsd.xvg"
+output_file_mean = os.path.join(input_directory, f"{label}_mean_rmsd.xvg")
 with open(output_file_mean, "w") as file:
     file.write("# Mean RMSD\n")
     for i in range(len(x)):
         file.write(f"{x[i]} {mean_rmsd[i]:.7f}\n")  # Write mean rmsd values with 7 decimal places
 
 # Generate new file with time, rmsd, and standard deviation
-output_file_stats = f"{label}_rmsd_stats.txt"
+output_file_stats = os.path.join(input_directory, f"{label}_rmsd_stats.txt")
 with open(output_file_stats, "w") as file:
     file.write("Time\tRMSD\tStandard Deviation\n")
     for i in range(len(x)):
         file.write(f"{x[i]}\t{mean_rmsd[i]:.7f}\t{std_rmsd[i]:.7f}\n")  # Write mean and standard deviation values with 7 decimal places
 
 # Generate new file with time, y-axis values, mean, and standard deviation
-output_file_data = f"{label}_data_values.txt"
+output_file_data = os.path.join(input_directory, f"{label}_data_values.txt")
 with open(output_file_data, "w") as file:
     file.write("Time\t")
     file.write("\t".join([file_name for file_name, _ in data]))  # Write column headers
@@ -65,4 +67,4 @@ with open(output_file_data, "w") as file:
     for i in range(len(x)):
         file.write(f"{x[i]}\t")
         file.write("\t".join([str(y[i]) for _, y in data]))  # Write y-axis values
-        file.write(f"\t{mean_rmsd[i]:.7f}\t{std_rmsd[i]:.7f}\n
+        file.write(f"\t{mean_rmsd[i]:.7f}\t{std_rmsd[i]:.7f}\n")
